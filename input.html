@@ -1,0 +1,48 @@
+<html>
+<head>
+  
+  <title>Google Maps Multiple Markers</title>
+  <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+  <p id="demp"></p>
+  <p>Take a look at <a href="get_merchants.json" target="_blank">get_merchants.json</a></p>
+</head>
+<body>
+  <div id="map" style="height: 400px; width: 500px;">
+</div>
+
+<script type="text/javascript">
+var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", "http://35.168.89.251:5000/get_merchants", false ); // false for synchronous request
+    xmlHttp.send( null );
+    var locations= xmlHttp.responseText;
+
+	locations = JSON.parse(locations);
+	
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: new google.maps.LatLng(18.568659, 73.90723600000001),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+//console.log(locations["result"]);
+locations.result.forEach (function(location) {
+  
+//console.log(location);
+  marker = new google.maps.Marker({
+    position: new google.maps.LatLng(location.latitude, location.longitude),
+    map: map
+  });
+  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+    return function() {
+      infowindow.setContent(location.merchant);
+      infowindow.open(map, marker);
+    }
+  })(marker, i));
+});	
+	
+  </script>
+</body>
+</html>

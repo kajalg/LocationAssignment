@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+    font-family: "Lato", sans-serif;
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="sidenav">
+  <span style="font-size:30px;cursor:pointer;color:white" >&#9776; </span>
+
+  <a href="List_users.html" target="_blank">List of users </a>
+  <a href="name.html" target="_blank">List of merchant names</a>
+  <a href="offer_cust.html" target="_blank">Offers / Merchant</a>
+  <a href="offer_cust_deviceId.html" target="_blank">Offers / Customers(device_id)</a>
+  <a href="input.html" target="_blank">Map for travel / Customer (device_id)</a>
+</div>
+
+<div class="main">
+    <title>Google Maps Multiple Markers</title>
+	<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+  
+  <p>Take a look at <a href="get_merchants.json" target="_blank">get_merchants.json</a></p>
+</head>
+<body>
+  <div id="map" style="height: 500px; width: 500px;">
+</div>
+
+<script type="text/javascript">
+var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", "http://35.168.89.251:5000/get_merchants", false ); // false for synchronous request
+    xmlHttp.send( null );
+    var locations= xmlHttp.responseText;
+
+	locations = JSON.parse(locations);
+	
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 13,
+      center: new google.maps.LatLng(18.568659, 73.90723600000001),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+//console.log(locations["result"]);
+locations.result.forEach (function(location) {
+  
+//console.log(location);
+  marker = new google.maps.Marker({
+    position: new google.maps.LatLng(location.latitude, location.longitude),
+    map: map
+  });
+  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+    return function() {
+      infowindow.setContent(location.merchant);
+      infowindow.open(map, marker);
+    }
+  })(marker, i));
+});	
+	
+  </script>
+  <script>
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+    document.body.style.backgroundColor = "white";
+}
+</script>
+  
+</body>
+</html>
+</div>
+     
+</body>
+</html> 

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        
+             <script type="text/javascript" >
+                function load() {
+                    var xmlHttp = new XMLHttpRequest();
+					xmlHttp.open( "GET", "http://35.168.89.251:5000/get_all_offers", false ); // false for synchronous request
+					xmlHttp.send( null );
+					
+					var locations= xmlHttp.responseText;
+					locations = JSON.parse(locations);
+
+                     for (var i=0;i<=locations.length;i++)
+					 {
+						document.write(locations[i].merchant);
+					 document.write("<br>");
+					 }
+					 
+					 
+					
+                 }
+        </script>
+    </head>
+    <body onload="load()">
+    <div id= "data">
+
+    </div>
+    </body>
+</html>
